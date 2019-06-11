@@ -144,7 +144,7 @@ multi_class='ovr', penalty='l2', random_state=0, tol=1e-05, verbose=0)}
 	test_3.to_csv("output_files/test.csv", index=False)
 
 	#run models, output results
-	fp.clf_loop_all_data(models_to_run, clfs, grid, final_list, pred_vars, dep_var, [1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 50.0], "results.csv")
+	fp.clf_loop_all_data(models_to_run, clfs, grid, final_list, pred_vars, dep_var, [1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 50.0], "output_files/results.csv")
 	return
 
 
