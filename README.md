@@ -3,13 +3,13 @@
 This is our final project for the UChicago class CAPP 30254, Machine Learning for Public Policy. For this project, we use machine learning to predict the block groups in Chicago where eviction risk is highest (in the top 10%) in the next 3 years.
 
 ## Team Members
-Nora Hajjar
+[Nora Hajjar](https://github.com/nors230)
 <br>
-Lilian Huang
+[Lilian Huang](https://github.com/lilianhj)
 <br>
-Peter Li
+[Peter Li](https://github.com/jizhao94)
 <br>
-Kyle Schindl
+[Kyle Schindl](https://github.com/kyleschindl)
 
 ## Requirements
 
