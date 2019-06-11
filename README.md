@@ -30,7 +30,7 @@ This is the list of Python libraries that should be installed to run our code:
 * scikit-learn
 * aequitas
 
-## Files Containing Raw Data
+## Files containing raw data
 
 These are all in the raw_data directory, except Crimes_-_2001_to_present.csv, which was too large to be uploaded.
 The uploaded files are zipped due to their large filesize.
