@@ -1,1 +1,1 @@
-The codes
+The scripts and files containing code
