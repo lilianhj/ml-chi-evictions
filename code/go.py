@@ -1,7 +1,6 @@
 '''
 Go file to run Pipeline
 '''
-
 import final_pipeline_for_vm as fp
 import numpy as np
 import pandas as pd
@@ -25,7 +24,6 @@ from sklearn.model_selection import ParameterGrid
 from pandas.api.types import is_string_dtype
 from sklearn.model_selection import train_test_split
 
-
 models_to_run = ['RF', 'DT', 'LR', 'NB', 'KNN', 'BG', 'AB', 'GB', 'SVM']
 
 
@@ -35,13 +33,8 @@ def run(models_to_run):
 	Inputs: list of models to run
 	Returns: None, runs the pipeline and outputs results to a csv file 
 	'''
-	#read data
-	og_df = fp.read_data('raw_data/full_data_chicago.csv')
-
-	#temporal validation
+	og_df = fp.read_data('../output_files/full_data_chicago.csv')
 	lst_train_test_dates = fp.temporal_validate(2005, 2016, [3])
-
-	#clean and filter data
 	data_select = og_df[og_df['Date'] >= 2005]
 	data_select['crime_rate'] = data_select['Sum']/data_select['population']
 	data_select['less_hs_rate'] = data_select['Total_Less_Than_HS']/data_select['population']
@@ -74,8 +67,6 @@ def run(models_to_run):
 			data.replace(np.inf, np.nan, inplace=True)
 			data.replace(-np.inf, np.nan, inplace=True)
 	fp.clean_data(final_list, cat_cols=to_category, disc_cols=to_discretize)
-
-	#set variables
 	pred_vars = ['population', 'poverty-rate',
 	   'renter-occupied-households', 'pct-renter-occupied',
 	   'median-gross-rent', 'median-household-income', 'median-property-value',
@@ -139,12 +130,9 @@ multi_class='ovr', penalty='l2', random_state=0, tol=1e-05, verbose=0)}
 			'DT': {'criterion': ['gini', 'entropy'], 'max_depth': [1,5,10,20,50,100],'min_samples_split': [2,5,10]},
 			'KNN' :{'n_neighbors': [1,5,10,25,50,100],'weights': ['uniform','distance'],'algorithm': ['auto','ball_tree','kd_tree']},
 			'NB' : {}}
-
-	train_3.to_csv("output_files/train.csv", index=False)
-	test_3.to_csv("output_files/test.csv", index=False)
-
-	#run models, output results
-	fp.clf_loop_all_data(models_to_run, clfs, grid, final_list, pred_vars, dep_var, [1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 50.0], "output_files/results.csv")
+	train_3.to_csv('../output_files/train.csv', index=False)
+	test_3.to_csv('../output_files/test.csv', index=False)
+	fp.clf_loop_all_data(models_to_run, clfs, grid, final_list, pred_vars, dep_var, [1.0, 2.0, 5.0, 10.0, 20.0, 30.0, 50.0], '../output_files/results.csv')
 	return
 
 

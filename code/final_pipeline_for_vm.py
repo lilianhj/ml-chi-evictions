@@ -1,7 +1,6 @@
 '''
 Final Pipeline
 '''
-
 import pandas as pd
 import numpy as np
 import csv
@@ -24,7 +23,6 @@ from pandas.api.types import is_string_dtype
 from sklearn.model_selection import train_test_split
 
 
-#Functions used in go file:
 def read_data(filename):
 	'''
 	Read csv file to a pandas dataframe
@@ -95,7 +93,7 @@ def find_top(df, datecol, outcome_col, master_dic, thres):
 		top.update(set(year_slice.sort_values(by=[outcome_col], ascending=False).head(int(len(year_slice)*thres))['GEOID']))
 	for year in df[datecol].unique():
 		master_dic[year] = top
-	return None
+	return
 
 
 def create_binary(row, master_dic):
@@ -186,8 +184,6 @@ def clean_data(df_list, cat_cols=None, disc_cols=None):
 	return
 
 
-#Additional pipeline functions:
-#statistics
 def describe_data(data, colname):
 	'''
 	Find the distribution of a variable in the dataset
@@ -249,6 +245,7 @@ def convert_to_datetime(df, cols):
 	'''
 	for col in cols:
 		df[col] =  pd.to_datetime(df[col])
+	return
 
 
 def convert_type(data, colname, target_type):
@@ -257,6 +254,7 @@ def convert_type(data, colname, target_type):
 	Input: data (dataframe), colname (str), type (str)
 	'''
 	data[colname] = data[colname].astype(target_type)
+	return
 
 
 def if_null(data, colname):
@@ -441,6 +439,7 @@ def plot_precision_recall_n(y_true, y_prob, model_name):
 	name = model_name
 	plt.title(name)
 	plt.show()
+	return
 	
 
 def clf_loop_all_data(models_to_run, clfs, grid, train_test_dfs, pred_vars, dep_var, thresholds, csv_path):
