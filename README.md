@@ -33,7 +33,7 @@ This is the list of Python libraries that should be installed to run our code:
 ## Files Containing Raw Data
 
 These are all in the raw_data directory, except Crimes_-_2001_to_present.csv, which was too large to be uploaded.
-The shapefiles are zipped due to their large filesize.
+The uploaded files are zipped due to their large filesize.
 
 * block-groups.csv, the original dataset on evictions which is manually downloaded from the [Eviction Lab](https://data-downloads.evictionlab.org/)
 * cb_2017_17_bg_500k, a block groups shapefile which is manually downloaded from the [Census Bureau](https://www2.census.gov/geo/tiger/GENZ2017/kml/)
