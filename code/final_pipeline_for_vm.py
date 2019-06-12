@@ -411,13 +411,13 @@ def f1_at_k(y_true, y_scores, k):
 	recall = recall_at_k(y_true, y_scores, k)
 	return 2 * (precision * recall)/(precision + recall)
 
-
 def plot_precision_recall_n(y_true, y_prob, model_name):
-	from sklearn.metrics import precision_recall_curve
+	'''
+	Outputs a precision-recall curve (shows in notebook and saves to filename). 
+	'''
+	y_true = y_true
 	y_score = y_prob
-	precision_curve, recall_curve, pr_thresholds = precision_recall_curve(y_true, y_score)
-	precision_curve = precision_curve[:-1]
-	recall_curve = recall_curve[:-1]
+	precision_curve, recall_curve, pr_thresholds = full_precision_recall_curve(y_true, y_score)
 	pct_above_per_thresh = []
 	number_scored = len(y_score)
 	for value in pr_thresholds:
@@ -434,13 +434,22 @@ def plot_precision_recall_n(y_true, y_prob, model_name):
 	ax2.plot(pct_above_per_thresh, recall_curve, 'r')
 	ax2.set_ylabel('recall', color='r')
 	ax1.set_ylim([0,1])
-	ax1.set_ylim([0,1])
 	ax2.set_xlim([0,1])
-	name = model_name
-	plt.title(name)
+	plt.title(model_name)
 	plt.show()
-	return
-	
+
+def full_precision_recall_curve(y_true, y_score):
+	'''
+	Implements precision-recall curve in a way that takes into account recall reaching 1.
+	'''
+	from sklearn.metrics.ranking import _binary_clf_curve
+	fps, tps, thresholds = _binary_clf_curve(y_true, y_score)
+
+	precision = tps / (tps + fps)
+	precision[np.isnan(precision)] = 0
+	recall = tps / tps[-1]
+
+	return precision, recall, thresholds
 
 def clf_loop_all_data(models_to_run, clfs, grid, train_test_dfs, pred_vars, dep_var, thresholds, csv_path):
 	"""Runs the loop using models_to_run, clfs, gridm and the data
