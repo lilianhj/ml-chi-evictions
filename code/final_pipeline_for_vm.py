@@ -413,7 +413,7 @@ def f1_at_k(y_true, y_scores, k):
 
 def plot_precision_recall_n(y_true, y_prob, model_name):
 	'''
-	Outputs a precision-recall curve (shows in notebook and saves to filename). 
+	Outputs a precision-recall curve. 
 	'''
 	y_true = y_true
 	y_score = y_prob
@@ -440,7 +440,7 @@ def plot_precision_recall_n(y_true, y_prob, model_name):
 
 def full_precision_recall_curve(y_true, y_score):
 	'''
-	Implements precision-recall curve in a way that takes into account recall reaching 1.
+	Helper function to implement precision-recall curve in a way that takes into account recall reaching 1.
 	'''
 	from sklearn.metrics.ranking import _binary_clf_curve
 	fps, tps, thresholds = _binary_clf_curve(y_true, y_score)
