@@ -353,6 +353,9 @@ def label_to_dummy(item, bar):
 
 #The following code referenced from the following website: https://github.com/rayidghani/magicloops/blob/master/simpleloop.py, credit to Rayid Ghani
 def define_clfs_params():
+	'''
+	Defines a set of classifiers and parameters.
+	'''
 	clfs = {
 		'BG': BaggingClassifier(n_estimators=10),
 		'RF': RandomForestClassifier(n_estimators=50, n_jobs=-1),
@@ -377,22 +380,50 @@ def define_clfs_params():
 
 
 def models_to_run():
+	'''
+	Defines a list of models to be run.
+	'''
 	models_to_run = ['RF', 'DT', 'LR', 'NB', 'KNN', 'BG', 'AB', 'GB', 'SVM']
 	return models_to_run
 	
 
 def joint_sort_descending(l1, l2):
+	'''
+	Sorts two numpy arrays in descending order.
+	Input:
+	l1, l2: numpy arrays
+	Adapted with permission from Rayid Ghani: https://github.com/rayidghani/magicloops
+	'''
 	idx = np.argsort(l1)[::-1]
 	return l1[idx], l2[idx]
 
 
 def generate_binary_at_k(y_scores, k):
+	'''
+	Converts predicted scores to binary 0/1 outcomes.
+	Input:
+	y_scores: an array of predicted scores
+	k: a threshold proportion
+	Returns:
+	an array of binary 0/1 outcomes
+	Adapted with permission from Rayid Ghani: https://github.com/rayidghani/magicloops
+	'''
 	cutoff_index = int(len(y_scores) * (k / 100.0))
 	test_predictions_binary = [1 if x < cutoff_index else 0 for x in range(len(y_scores))]
 	return test_predictions_binary
 
 
 def precision_at_k(y_true, y_scores, k):
+	'''
+	Calculates precision of a model at a given threshold.
+	Input:
+	y_true: an array of true outcome labels
+	y_scores: an array of predicted scores
+	k: a threshold proportion
+	Returns:
+	a precision score
+	Adapted with permission from Rayid Ghani: https://github.com/rayidghani/magicloops
+	'''
 	y_scores, y_true = joint_sort_descending(np.array(y_scores), np.array(y_true))
 	preds_at_k = generate_binary_at_k(y_scores, k)
 	precision = precision_score(y_true, preds_at_k)
@@ -400,6 +431,16 @@ def precision_at_k(y_true, y_scores, k):
 
 
 def recall_at_k(y_true, y_scores, k):
+	'''
+	Calculates recall of a model at a given threshold.
+	Input:
+	y_true: an array of true outcome labels
+	y_scores: an array of predicted scores
+	k: a threshold proportion
+	Returns:
+	a recall score
+	Adapted with permission from Rayid Ghani: https://github.com/rayidghani/magicloops
+	'''
 	y_scores, y_true = joint_sort_descending(np.array(y_scores), np.array(y_true))
 	preds_at_k = generate_binary_at_k(y_scores, k)
 	recall = recall_score(y_true, preds_at_k)
@@ -407,13 +448,26 @@ def recall_at_k(y_true, y_scores, k):
 
 
 def f1_at_k(y_true, y_scores, k):
+	'''
+	Calculates the F1 score using the formula F1 = 2 * (precision * recall) / (precision + recall)
+	Input:
+	y_true: an array of true outcome labels
+	y_scores: an array of predicted scores
+	k: a threshold proportion
+	Returns: An F1 score.
+	'''
 	precision = precision_at_k(y_true, y_scores, k)
 	recall = recall_at_k(y_true, y_scores, k)
 	return 2 * (precision * recall)/(precision + recall)
 
 def plot_precision_recall_n(y_true, y_prob, model_name):
 	'''
-	Outputs a precision-recall curve. 
+	Plots precision-recall curve for a model.
+	Input:
+	y_true: an array of true outcome labels
+	y_prob: an array of predicted probabilities
+	model_name (str): the name of the model to be used as the graph title
+	Adapted with permission from Rayid Ghani: https://github.com/rayidghani/magicloops
 	'''
 	y_true = y_true
 	y_score = y_prob
@@ -441,6 +495,9 @@ def plot_precision_recall_n(y_true, y_prob, model_name):
 def full_precision_recall_curve(y_true, y_score):
 	'''
 	Helper function to implement precision-recall curve in a way that takes into account recall reaching 1.
+	Input:
+	y_true: an array of true outcome labels
+	y_prob: an array of predicted probabilities
 	'''
 	from sklearn.metrics.ranking import _binary_clf_curve
 	fps, tps, thresholds = _binary_clf_curve(y_true, y_score)
@@ -452,8 +509,20 @@ def full_precision_recall_curve(y_true, y_score):
 	return precision, recall, thresholds
 
 def clf_loop_all_data(models_to_run, clfs, grid, train_test_dfs, pred_vars, dep_var, thresholds, csv_path):
-	"""Runs the loop using models_to_run, clfs, gridm and the data
-	"""
+	'''
+	Given a set of models to run, parameters, and a list of temporally split training/testing datasets, runs each model
+	for each combination of parameters.
+
+	Input:
+	- models_to_run: a list of model names to be run
+	- classifiers: a dictionary of models
+	- grid: a dictionary of parameters to test for each model that is run
+	- train_test_dfs: a list of training/test dataframes
+	- pred_vars: the list of predictor variables
+	- dep_var: the outcome variable
+	- thresholds: a list of thresholds for which to calculate metrics
+	- csv_path: the filename of the csv to which results will be written
+	'''
 	with open(csv_path, 'w') as csv_file:
 		writer = csv.writer(csv_file, delimiter = ',')
 		writer.writerow(['time_period', 'model_type', 'clf', 'parameters', 'threshold', 'auc-roc',
@@ -490,6 +559,14 @@ def clf_loop_all_data(models_to_run, clfs, grid, train_test_dfs, pred_vars, dep_
 
 
 def get_feature_importance(X_train, model):
+	'''
+	Gets the feature importances of a chosen random forest classifier.
+	Input:
+	X_train: a dataframe of predictor variables to fit the model
+	model: the random forest for which we are getting feature importances
+
+	Adapted from https://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+	'''
 	importances = model.feature_importances_
 	std = np.std([tree.feature_importances_ for tree in model.estimators_],
 			 axis=0)
